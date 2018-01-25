@@ -1,0 +1,124 @@
+{{ partial "head" . }}
+{{ partial "header" . }}
+
+<code id="calendar-json" style="display:none;">
+  {{- $.Scratch.Add "index" slice -}}
+  {{- range where (where .Site.Pages "Section" "post") "Kind" "page" -}}
+    {{- $.Scratch.Add "index" (dict "date" .Date "url" .URL "tags" .Params.tags "number" .Params.number) -}}
+  {{- end -}}
+  {{- $.Scratch.Get "index" | jsonify -}}
+</code>
+
+<div id="root">
+</div>
+
+<script>
+ String.prototype.format = function() {
+   var args = arguments;
+   return this.replace(/{(\d+)}/g, function(match, number) {
+     return typeof args[number] != 'undefined' ? args[number] : match;
+   });
+ };
+
+ Date.prototype.monthDays = function() {
+   var d = new Date(this.getFullYear(), this.getUTCMonth()+1, 0);
+   return d.getDate();
+ }
+
+ Date.prototype.firstWeekdayOfMonth = function() {
+   var d = new Date(this.getFullYear(), this.getUTCMonth(), 1);
+   return d.getDay();
+ }
+
+ Date.prototype.formatMonth = function () {
+   const monthNames = [
+     "January", "February", "March",
+     "April", "May", "June", "July",
+     "August", "September", "October",
+     "November", "December"
+   ];
+   return monthNames[this.getUTCMonth()];
+ }
+
+ function padTwo (number) {
+   const ret = String(number);
+   return ret.length === 1 ? '0' + ret : ret;
+ }
+
+ // Convert raw hugo objects to objects with day: number key/value pairs
+ function dayNumberMap (pages) {
+   var ret = {};
+   for (const page of pages) {
+     const date = new Date(page.date);
+     const yearMonth = date.getUTCFullYear() + '-' + padTwo((date.getUTCMonth()+1));
+     if (typeof(ret[yearMonth]) == 'undefined') { ret[yearMonth] = new Array(date.monthDays())}
+     ret[yearMonth][date.getUTCDate()-1] = page;
+   }
+   return ret;
+ }
+
+ // Make calendar HTML
+ function calendarMonth (month, days) {
+   const calendarDayHTML = '<div class="pure-u-1-8 calendar-day">{0}</div>';
+   var html = `
+     <div class="pure-g calendar-table">
+       <div class="pure-u-1">
+         <h3>${month.getFullYear()} ${month.formatMonth()}</h3>
+       </div>`;
+   // Insert blank space for weekdays falling on the previous month
+   for (i=month.firstWeekdayOfMonth(); i>0; --i) {
+     html += calendarDayHTML.format('&nbsp;');
+   }
+   // Print days
+   for (const day of days) {
+     if (month.firstWeekdayOfMonth() % 7 == 0) {
+       html += calendarDayHTML.format('&nbsp;');
+     } else {
+       if (day) {
+         const tag = day.tags ? '<span class="tag">#</span>' : '';
+         html += calendarDayHTML.format(`<a class="number" href="${day.url}">${day.number}</a>${tag}`);
+       } else {
+         html += calendarDayHTML.format('<span class="blank-number">.</span>');
+       }
+     }
+   }
+   html += '</div>';
+   return html;
+ }
+
+ // Make calendar out of json located at id
+ function calendar (id) {
+   const pages = JSON.parse(document.getElementById(id).textContent);
+   const days = dayNumberMap(pages);
+   var html = '';
+   for (const month in days) {
+     html += calendarMonth(new Date(month), days[month]);
+   }
+   return html
+ }
+
+ // Return the average of a grouping (groupId) of numbers (numberId)
+ function average () {
+   const months = document.querySelectorAll('.calendar-table');
+   for (const month of months) {
+     const numbers = Array.prototype.slice.call(month.querySelectorAll('.number'));
+     const sum = numbers.reduce(function (acc, val) {
+       return acc + parseInt(val.textContent);
+     }, 0);
+     const avg = Math.round(sum / numbers.length);
+     month.insertAdjacentHTML('beforeend',`
+      <div class="pure-u-1">&nbsp;</div>
+      <div class="pure-u-1-8 average">${avg}</div>
+      <div class="pure-u-3-4 average-text">average</div>`)
+   }
+ }
+
+ document.getElementById('root').innerHTML = calendar('calendar-json');
+ average();
+</script>
+
+{{ partial "scripts.html" . }}
+{{ partial "footer.html" . }}
+
+</body>
+</html>

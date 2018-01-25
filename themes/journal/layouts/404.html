@@ -1,0 +1,50 @@
+{{ partial "head.html" . }}
+{{ partial "header.html" . }}
+
+<code>
+{{ printf "%#v" $.Site.Pages }}
+</code>
+
+{{ range (where .Site.Pages "Section" "post").GroupByDate "January 2006" }}
+<div class="pure-g journal-table">
+  <div class="pure-u-1 month-heading">
+    <h3>{{ .Key }}</h3>
+  </div>
+  {{ range .Pages }}
+    <div class="pure-u-1-8 day">
+      <a href="{{ .URL }}">{{ .Date.Format "02" }}</a>
+    </div>
+    <div class="pure-u-1-8 number">
+      <a href="{{ .URL }}">{{ .Params.number }}</a>
+    </div>
+    <div class="pure-u-3-4 text">
+      <a href="{{ .URL }}">{{ .Summary }}</a>
+    </div>
+  {{ end }}
+</div>
+{{ end }}
+
+<script>
+// Return the average of a grouping (groupId) of numbers (numberId)
+function average () {
+  const months = document.querySelectorAll('.journal-table');
+  for (const month of months) {
+    const numbers = Array.prototype.slice.call(month.querySelectorAll('.number'));
+    const sum = numbers.reduce(function (acc, val) {
+      return acc + parseInt(val.textContent);
+    }, 0);
+    const avg = Math.round(sum / numbers.length);
+    month.insertAdjacentHTML('beforeend',`
+      <div class="pure-u-1-8">&nbsp;</div>
+      <div class="pure-u-1-8 average">${avg}</div>
+      <div class="pure-u-3-4 average-text">average</div>`)
+  }
+}
+average();
+</script>
+
+{{ partial "scripts.html" . }}
+{{ partial "footer.html" . }}
+
+</body>
+</html>

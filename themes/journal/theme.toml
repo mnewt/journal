@@ -1,0 +1,6 @@
+name = "Journal"
+license = "MIT"
+licenselink = "LICENSE.md"
+description = "Theme for my health and writing journal"
+homepage = "."
+min_version = 0.19

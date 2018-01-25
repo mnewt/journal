@@ -1,0 +1,22 @@
+<!doctype html>
+<html>
+<head>
+
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<title>{{ if .Title }}{{ .Title }}{{ else }}{{ .Site.Title }}{{ end }}</title>
+<meta name="description" content="{{ .Description }}">
+
+<style type="text/css">
+{{ partial "main.css" . | safeCSS }}
+</style>
+
+<link rel="canonical" href="{{ print .Site.BaseURL .URL  }}">
+<link rel="alternate" type="application/rss+xml" title="{{ .Site.Title }}" href="{{ .Site.RSSLink }}">
+
+<link rel="icon" type="image/png" href="/favicon.png">
+
+</head>
+<body>

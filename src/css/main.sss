@@ -1,0 +1,106 @@
+@import "pure.css"
+
+$base-font-family: "Georgia", serif
+$base-font-size: 14pt
+$base-text-color: #444
+
+$heading-font-family: $base-font-family
+
+$background-color: #FFF
+$link-color: $base-text-color
+
+$medium-color: #999
+$light-color: #777
+
+html
+  -webkit-font-smoothing: antialiased
+  -moz-osx-font-smoothing: grayscale
+
+html, button, input, select, textarea,
+.pure-g [class *= "pure-u"]
+  font-family: $base-font-family
+  font-size: $base-font-size
+  background-color: $background-color
+
+body
+  color: $base-text-color
+  line-height: 1.2em
+
+a
+  color: $link-color
+  text-decoration: none
+
+h1
+  font-size: 32px
+
+@media (max-width: 568px)
+  h1
+    font-size: 18px
+
+h3
+  margin-top: 1.5em
+  margin-bottom: 0.5em
+
+a.header-inactive
+  color: $medium-color
+
+.page-header, .post-header
+  text-align: center
+
+.post-content, .journal-table
+  margin-top: 2em
+  margin-left: 5em
+  margin-right: 5em
+
+@media (max-width: 768px)
+  .post-content, .journal-table
+    margin-left: 2em
+    margin-right: 2em
+
+.calendar-table
+  margin-left: 20%
+  margin-right: 20%
+
+@media (max-width: 568px)
+  .calendar-table
+    margin-left: 10%
+    margin-right: 10%
+
+.journal-table
+  position: relative
+
+.journal-table:after
+  content: ""
+  position: absolute
+  z-index: 1
+  bottom: 0
+  left: 80%
+  background: linear-gradient(to right, rgba(255,255,255,0), rgba(255,255,255, 1) 100%)
+  width: 20%
+  height: 100%
+
+.day,
+.number,
+.average
+  text-align: center
+
+.text
+  white-space: nowrap
+  overflow: hidden
+
+.calendar-day, .average-row
+  margin-top: 0.5em
+
+.tag
+  color: $light-color
+
+.average,
+.average-text
+  color: $light-color
+
+.search-input, .result-list
+  width: 30em
+
+@media (max-width: 568px)
+  .search-input, .result-list
+    width: 17em

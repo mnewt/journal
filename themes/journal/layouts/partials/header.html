@@ -1,0 +1,22 @@
+<header class="page-header">
+  <h1>
+    <nav>
+      {{ $currentPage := . }}
+      {{ range .Site.Menus.main }}
+        <a class="sidebar-nav-item{{if eq $currentPage.URL .URL  }} header-active {{else}} header-inactive {{end}}" href="{{.URL}}">{{ .Name }}</a> |
+      {{ end }}
+      <a href="#" id="search-toggle" class="header-inactive">Search</a>
+    </nav>
+  </h1>
+  <div id="search-box" style="display:none;">
+    <form id="search-form" class="pure-form">
+      <fieldset>
+        <input id="search" class="search-input" type="text" placeholder="Search posts"/>
+      </fieldset>
+    </form>
+    <div>
+      <ul id="result-list" class="result-list pure-menu-list">
+      </ul>
+    </div>
+  </div>
+</header>

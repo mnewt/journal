@@ -1,0 +1,27 @@
+languageCode = "en-us"
+title = "My writing and health journal"
+baseURL = "http://journal.knosis.org"
+
+theme = "journal"
+
+[outputs]
+  home = [ "HTML", "JSON"]
+  page = [ "HTML"]
+
+[taxonomies]
+  number = "numbers"
+  tag = "tags"
+  category = "categories"
+
+[[menu.main]]
+  name = "Journal"
+  weight = 1
+  url = "/"
+[[menu.main]]
+  name = "Calendar"
+  weight = 2
+  url = "/calendar/"
+[[menu.main]]
+  name = "Tags"
+  weight = 3
+  url = "/tags/"
